@@ -1,0 +1,7 @@
+.avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 15px;
+    border: 2px dashed var(--avatar-border);
+    filter: var(--avatar-shadow);
+}

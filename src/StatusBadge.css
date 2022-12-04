@@ -1,0 +1,15 @@
+.status-badge {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.label {
+    font-size: 14px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: var(--primary-anthracite-100);
+}
+
+.status-badge.unknown .label {
+    color: var(--primary-anthracite-70);
+}

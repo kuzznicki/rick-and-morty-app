@@ -1,32 +1,61 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
 import './App.css'
+import SearchInput from './SearchInput';
+import Select from './Select';
+import { getTempApiData, unique } from './utils';
+import CharactersTable from './CharactersTable';
+import { ApiSchema, Character, Status } from './types';
+
+
+const apiData = getTempApiData();
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [data, setData] = useState<ApiSchema[]>(apiData);
+  const tableData: Character[] = data.map((e, i) => {
+    return { 
+      id: e.id,
+      name: e.name,
+      avatar: e.image,
+      origin: e.origin.name,
+      gender: e.gender,
+      status: e.status,
+      species: e.species
+    };
+  });
+  
+  const [displayedData, setDisplayedData] = useState(tableData);
+  const speciesOptions = unique(apiData.map(e => e.species));
+
+  function filterCharacters(key: keyof Character, query: string, exactMatch: boolean = false) {
+    if (!query.length) {
+      setDisplayedData([...tableData]);  
+    } else {
+      const matched = tableData.filter(e => {
+        const value = (e[key] as string).toLowerCase();
+        const queryLower = query.toLowerCase();
+        return exactMatch ? value === queryLower : value.includes(queryLower);
+      });
+      
+      setDisplayedData(matched);
+    }
+  }
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h1>Characters</h1>
+
+        <div className="filters">
+          <SearchInput id="search" name="search" onChange={query => filterCharacters('name', query)} />
+          <Select 
+            placeholder="Species"
+            options={speciesOptions} 
+            onChange={species => filterCharacters('species', species, true)}
+          />
+        </div>
+      
+      <div className="content">
+        <CharactersTable data={displayedData} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
   )
 }
