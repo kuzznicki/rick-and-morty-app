@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Character } from "./types";
-import '@/styles/CharactersTable.scss';
-import { Avatar } from "./Avatar";
 import StatusBadge from "./StatusBadge";
+import { Avatar } from "./Avatar";
+import { Character } from "@/types";
+import '@/styles/CharactersTable.scss';
 
 type Props = {
     data: Character[]

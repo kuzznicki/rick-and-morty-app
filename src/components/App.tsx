@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import '@/styles/App.scss'
+import CharactersTable from './CharactersTable';
 import SearchInput from './SearchInput';
 import Select from './Select';
-import { getTempApiData, unique } from './utils';
-import CharactersTable from './CharactersTable';
-import { ApiSchema, Character, Status } from './types';
+import { ApiSchema, Character, Status } from '@/types';
+import { getTempApiData, unique } from '@/utils';
+import '@/styles/App.scss'
 
 /**
  * - czy checkbox do zaznaczania wszystkich ma zaznaczac tylko wyswietlone, czy wszystkie rekordy?
@@ -14,6 +14,12 @@ import { ApiSchema, Character, Status } from './types';
  * useFilter
  * useFetch
  * usePagination
+ * 
+ * 1. pagination
+ * 2. useTooltip
+ * 3. global style
+ * 4. refactor styles
+ * 5. code review
  * 
  */
 
