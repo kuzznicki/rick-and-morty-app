@@ -4,7 +4,6 @@ import { Avatar } from "./Avatar";
 import { Character } from "@/types";
 import '@/styles/components/CharactersTable.scss';
 import Tooltip from "./Tooltip";
-import ReactTooltip from "react-tooltip";
 
 type Props = {
     data: Character[]
@@ -68,8 +67,8 @@ export default function CharactersTable({ data }: Props) {
                                 />
                             </td>
                             <td>
-                                <span className="name" data-tip={name}>{name}</span>
-                                <span className="species" data-tip={species}>{species}</span>
+                                <span className="name">{name}</span>
+                                <span className="species">{species}</span>
                             </td>
                             <td><Avatar source={avatar} name={name} /></td>
                             
@@ -80,7 +79,7 @@ export default function CharactersTable({ data }: Props) {
                             
                             
                             <td>
-                                <span data-tip={gender}>{gender}</span>
+                                <span>{gender}</span>
                             </td>
                             <td><StatusBadge status={status}/></td>
                         </tr>
@@ -88,7 +87,6 @@ export default function CharactersTable({ data }: Props) {
                 })}
             </tbody>
         </table>
-        <ReactTooltip />
         </>
     );
 }
