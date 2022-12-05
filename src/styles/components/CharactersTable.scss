@@ -33,16 +33,21 @@ table {
 
         td {
             border-top: 1px solid $secondaryBluePale30;
-            
-            & .species { color: $primaryAnthracite80; }
-            &.unknown { color: $primaryAnthracite70; }
-        }
-        
-        td, td > span {
             padding: 16px 16px 16px 0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }   
+            
+            & .species { color: $primaryAnthracite80; }
+            &.unknown { color: $primaryAnthracite70; }
+        }
+
+        td > span {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: fit-content;
+        }
     }
 }

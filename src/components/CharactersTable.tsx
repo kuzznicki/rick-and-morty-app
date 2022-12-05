@@ -3,6 +3,8 @@ import StatusBadge from "./StatusBadge";
 import { Avatar } from "./Avatar";
 import { Character } from "@/types";
 import '@/styles/components/CharactersTable.scss';
+import Tooltip from "./Tooltip";
+import ReactTooltip from "react-tooltip";
 
 type Props = {
     data: Character[]
@@ -53,30 +55,40 @@ export default function CharactersTable({ data }: Props) {
             </thead>
             <tbody>
                 {data.map(row => {
-                    const trClassName = row.status === 'Dead' ? 'inactive' : '';
-                    const originClass = 'origin ' + (row.origin === 'unknown' ? 'unknown' : '');
+                    const { id, name, species, avatar, origin, gender, status } = row;
+                    const trClassName = status === 'Dead' ? 'inactive' : '';
+                    const originClass = 'origin ' + (origin === 'unknown' ? 'unknown' : '');
 
                     return (
-                        <tr key={row.id} className={trClassName}>
+                        <tr key={id} className={trClassName}>
                             <td>
                                 <input type="checkbox" 
-                                    onChange={e => toggleCheckbox(row.id, e.target.checked)}
-                                    checked={selectedById[row.id]}
+                                    onChange={e => toggleCheckbox(id, e.target.checked)}
+                                    checked={selectedById[id]}
                                 />
                             </td>
                             <td>
-                                <div className="name">{row.name}</div>
-                                <div className="species">{row.species}</div>
+                                <span className="name" data-tip={name}>{name}</span>
+                                <span className="species" data-tip={species}>{species}</span>
                             </td>
-                            <td><Avatar source={row.avatar} name={row.name} /></td>
-                            <td className={originClass}>{row.origin}</td>
-                            <td>{row.gender}</td>
-                            <td><StatusBadge status={row.status}/></td>
+                            <td><Avatar source={avatar} name={name} /></td>
+                            
+                            
+                            <td className={originClass}>
+                                <Tooltip>{origin}</Tooltip>
+                            </td>
+                            
+                            
+                            <td>
+                                <span data-tip={gender}>{gender}</span>
+                            </td>
+                            <td><StatusBadge status={status}/></td>
                         </tr>
                     );
                 })}
             </tbody>
         </table>
+        <ReactTooltip />
         </>
     );
 }

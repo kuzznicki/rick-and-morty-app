@@ -19,8 +19,8 @@ import Pagination from './Pagination';
  * 1. pagination - done
  * 2. multiple select - done
  * 3. useTooltip
- * 4. global style
- * 5. refactor styles
+ * 4. global style - done
+ * 5. refactor styles - done
  * 6. code review
  * 
  */
