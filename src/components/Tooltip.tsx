@@ -31,7 +31,6 @@ function useCheckOverflow(ref: MutableRefObject<HTMLElement | null>) {
     
     useLayoutEffect(() => {
         const handleResize = () => {
-            console.log('handle resize')
             setIsOverflowing(checkOverflow(ref.current))
         };
         window.addEventListener('resize', handleResize);

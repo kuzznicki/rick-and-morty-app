@@ -64,7 +64,6 @@ function App() {
   }
 
   function handlePageChange(firstIndex: number, lastIndex: number) {
-    console.log(firstIndex, lastIndex);
     setDisplayedData(tableData.slice(firstIndex, lastIndex));
   }
 
