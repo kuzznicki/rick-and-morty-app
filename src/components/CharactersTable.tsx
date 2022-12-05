@@ -77,7 +77,6 @@ export default function CharactersTable({ data }: Props) {
                 })}
             </tbody>
         </table>
-        <div className="pagination"></div>
         </>
     );
 }

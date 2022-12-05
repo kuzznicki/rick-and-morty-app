@@ -124,3 +124,21 @@ body {
   min-height: 100vh;
 }
 
+button {
+  font-size: 14px;
+  height: 40px;
+  min-width: 40px;
+  margin: 0 2px;
+  border: 1px solid var(--secondary-blue-pale-40);
+  border-radius: 5px;
+  background-color: white;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+button.active {
+  background-color: var(--secondary-blue-pale-10);
+}
+

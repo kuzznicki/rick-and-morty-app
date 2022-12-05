@@ -5,6 +5,7 @@ import Select from './Select';
 import { ApiSchema, Character, Status } from '@/types';
 import { getTempApiData, unique } from '@/utils';
 import '@/styles/App.scss'
+import Pagination from './Pagination';
 
 /**
  * - czy checkbox do zaznaczania wszystkich ma zaznaczac tylko wyswietlone, czy wszystkie rekordy?
@@ -26,7 +27,7 @@ import '@/styles/App.scss'
 const apiData = getTempApiData();
 
 function App() {
-  // [data, isLoading, error] = useFetch();
+  const perPage = 10;
   const [data, setData] = useState<ApiSchema[]>(apiData);
   const tableData: Character[] = data.map((e, i) => {
     return { 
@@ -39,8 +40,7 @@ function App() {
       species: e.species
     };
   });
-  
-  const [displayedData, setDisplayedData] = useState(tableData);
+  const [displayedData, setDisplayedData] = useState(tableData.slice(0, perPage));
   const speciesOptions = unique(apiData.map(e => e.species));
 
   function filterCharacters(key: keyof Character, query: string, exactMatch: boolean = false) {
@@ -55,6 +55,11 @@ function App() {
       
       setDisplayedData(matched);
     }
+  }
+
+  function handlePageChange(firstIndex: number, lastIndex: number) {
+    console.log(firstIndex, lastIndex);
+    setDisplayedData(tableData.slice(firstIndex, lastIndex));
   }
 
   return (
@@ -72,6 +77,7 @@ function App() {
       
       <div className="content">
         <CharactersTable data={displayedData} />
+        <Pagination itemsCount={tableData.length} perPage={perPage} onChange={handlePageChange} />
       </div>
     </div>
   )
