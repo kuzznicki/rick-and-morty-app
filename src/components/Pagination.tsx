@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react";
-import '@/styles/Pagination.scss';
+import '@/styles/components/Pagination.scss';
 import chevronLeft from '@/assets/chevron-left.svg';
 import chevronRight from '@/assets/chevron-right.svg';
 

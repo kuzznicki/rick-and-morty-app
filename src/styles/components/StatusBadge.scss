@@ -1,0 +1,17 @@
+@use '../variables' as *;
+
+.status-badge {
+    display: flex;
+    gap: 0.5rem;
+
+    .label {
+        font-size: 14px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        color: $primaryAnthracite100;
+    }
+
+    &.unknown .label {
+        color: $primaryAnthracite70;
+    }
+}

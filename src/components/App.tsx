@@ -4,7 +4,7 @@ import SearchInput from './SearchInput';
 import MultiSelect from './MultiSelect';
 import { ApiSchema, Character, Status } from '@/types';
 import { getTempApiData, unique } from '@/utils';
-import '@/styles/App.scss'
+import '@/styles/components/App.scss'
 import Pagination from './Pagination';
 
 /**

@@ -1,5 +1,5 @@
 import searchIcon from '@/assets/search.svg';
-import '@/styles/SearchInput.scss';
+import '@/styles/components/SearchInput.scss';
 
 type SearchProps = {
     id: string,

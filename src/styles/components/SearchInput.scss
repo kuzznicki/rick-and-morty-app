@@ -1,0 +1,22 @@
+@use '../variables' as *;
+
+.search-input {
+    position: relative;
+    width: 140px;
+    height: $inputHeight;
+
+    input {
+        height: 100%;
+        width: 100%;
+        font-size: $inputFontSize;
+        border: $inputBorder;
+        border-radius: $borderRadius;
+        padding: $inputPadding;
+    }
+
+    .icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+}

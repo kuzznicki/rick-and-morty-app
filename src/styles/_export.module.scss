@@ -1,21 +1,21 @@
 @use './variables' as *;
 
 :export {
+    primaryBlueLight: $primaryBlueLight;
+    primaryAnthracite100: $primaryAnthracite100;
+    primaryAnthracite80: $primaryAnthracite80;
+    primaryAnthracite70: $primaryAnthracite70;
+    primaryAnthracite50: $primaryAnthracite50;
+    primaryAnthracite25: $primaryAnthracite25;
+
+    secondaryBluePale100: $secondaryBluePale100;
+    secondaryBluePale40: $secondaryBluePale40;
+    secondaryBluePale30: $secondaryBluePale30;
+    secondaryBluePale15: $secondaryBluePale15;
+    secondaryBluePale10: $secondaryBluePale10;
+    secondaryBluePale5: $secondaryBluePale5;
+
     inputBorderColor: $inputBorderColor;
     inputFocusColor: $inputFocusColor;
     inputFocusBorderWidth: $inputFocusBorderWidth;
-    
-    primaryBlueLight: $primary_blue_light;
-    primaryAnthracite100: $primary_anthracite_100;
-    primaryAnthracite80: $primary_anthracite_80;
-    primaryAnthracite70: $primary_anthracite_70;
-    primaryAnthracite50: $primary_anthracite_50;
-    primaryAnthracite25: $primary_anthracite_25;
-
-    secondaryBluePale100: $secondary_blue_pale_100;
-    secondaryBluePale40: $secondary_blue_pale_40;
-    secondaryBluePale30: $secondary_blue_pale_30;
-    secondaryBluePale15: $secondary_blue_pale_15;
-    secondaryBluePale10: $secondary_blue_pale_10;
-    secondaryBluePale5: $secondary_blue_pale_5;
 }

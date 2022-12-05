@@ -2,7 +2,7 @@ import { useState } from "react";
 import StatusBadge from "./StatusBadge";
 import { Avatar } from "./Avatar";
 import { Character } from "@/types";
-import '@/styles/CharactersTable.scss';
+import '@/styles/components/CharactersTable.scss';
 
 type Props = {
     data: Character[]

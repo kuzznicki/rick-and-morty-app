@@ -1,13 +1,14 @@
-@use './variables' as *;
+@use '../variables' as *;
 
 .multi-select {
     .control {
+        cursor: pointer;
         min-width: 140px;
         font-size: 14px;
     }
 
     .option {
         font-size: 14px;
-        color: $primary_anthracite_80;
+        color: $primaryAnthracite80;
     }
 }

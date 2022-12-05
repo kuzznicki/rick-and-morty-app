@@ -1,0 +1,48 @@
+@use '../variables' as *;
+
+table {
+    width: 100%;
+    background-color: white;
+    border-radius: $borderRadius;
+    filter: drop-shadow(0px 2px 18px #DDE3EC);
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    table-layout: fixed;
+    color: $primaryAnthracite100;
+    font-size: 15px;
+
+    thead > tr > th:first-of-type, 
+    tbody > tr > td:first-of-type { 
+        padding-left: 24px;
+    }
+
+    thead > tr > th {
+        font-size: 14px;
+        padding: 12px 0;
+        text-align: left;
+    }
+
+    tbody > tr {
+        &.inactive {
+            color: $primaryAnthracite70;
+            background-color: $secondaryBluePale5;
+
+            td .species { color: $primaryAnthracite50; }
+            td.unknown { color: $primaryAnthracite25; }
+        }
+
+        td {
+            border-top: 1px solid $secondaryBluePale30;
+            
+            & .species { color: $primaryAnthracite80; }
+            &.unknown { color: $primaryAnthracite70; }
+        }
+        
+        td, td > span {
+            padding: 16px 16px 16px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }   
+    }
+}

@@ -2,7 +2,7 @@ import { Status } from "@/types";
 import unknownIcon from '@/assets/unknown.svg';
 import aliveIcon from '@/assets/alive.svg';
 import deadIcon from '@/assets/dead.svg';
-import '@/styles/StatusBadge.scss';
+import '@/styles/components/StatusBadge.scss';
 
 const iconByStatus: { [key in Status]: string } = {
     Dead: deadIcon,

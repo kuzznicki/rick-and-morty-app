@@ -1,4 +1,4 @@
-import '@/styles/Avatar.scss'
+import '@/styles/components/Avatar.scss'
 
 type AvatarProps = {
     name?: string

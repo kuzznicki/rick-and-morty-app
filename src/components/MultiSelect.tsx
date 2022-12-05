@@ -1,5 +1,5 @@
 import Select from 'react-select';
-import '@/styles/MultiSelect.scss';
+import '@/styles/components/MultiSelect.scss';
 import cssVars from '@/styles/_export.module.scss';
 
 type SelectProps = {
