@@ -1,3 +1,5 @@
+@use './variables' as *;
+
 .multi-select {
     .control {
         min-width: 140px;
@@ -6,5 +8,6 @@
 
     .option {
         font-size: 14px;
+        color: $primary_anthracite_80;
     }
 }
