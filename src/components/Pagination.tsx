@@ -1,5 +1,7 @@
-import { ReactNode, useState } from "react"
-import '@/styles/Pagination.scss'
+import { ReactNode, useState } from "react";
+import '@/styles/Pagination.scss';
+import chevronLeft from '@/assets/chevron-left.svg';
+import chevronRight from '@/assets/chevron-right.svg';
 
 type State = { page: number };
 type Action = { type: string };
@@ -59,7 +61,7 @@ export default function Pagination({ itemsCount, perPage, initialPage = 1, onCha
     return (
         <div className="pagination" style={{ marginTop: '43px' }}>
             <button disabled={page <= 1} onClick={() => changePage(page - 1)}>
-                &lt;
+                <img src={chevronLeft} />
             </button>
             {numbersToButtons(first3)}
             {isSeparatorNeeded(first3, mid3) && <Separator />}
@@ -67,7 +69,7 @@ export default function Pagination({ itemsCount, perPage, initialPage = 1, onCha
             {isSeparatorNeeded(mid3, last3) && <Separator />}
             {numbersToButtons(last3)}
             <button disabled={page >= lastPage} onClick={() => changePage(page + 1)}>
-                &gt;
+                <img src={chevronRight} />
             </button>
 
         </div>
