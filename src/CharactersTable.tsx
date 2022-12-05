@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Character } from "./types";
-import './CharactersTable.css';
+import '@/styles/CharactersTable.scss';
 import { Avatar } from "./Avatar";
 import StatusBadge from "./StatusBadge";
 

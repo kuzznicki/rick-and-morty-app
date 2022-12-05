@@ -1,15 +1,26 @@
 import { useState } from 'react'
-import './App.css'
+import '@/styles/App.scss'
 import SearchInput from './SearchInput';
 import Select from './Select';
 import { getTempApiData, unique } from './utils';
 import CharactersTable from './CharactersTable';
 import { ApiSchema, Character, Status } from './types';
 
+/**
+ * - czy checkbox do zaznaczania wszystkich ma zaznaczac tylko wyswietlone, czy wszystkie rekordy?
+ * - czy apka ma byc napisana z RWD?
+ * - czy Status rzeczywiscie ma miec 14px skoro reszta ma 15px
+ * 
+ * useFilter
+ * useFetch
+ * usePagination
+ * 
+ */
 
 const apiData = getTempApiData();
 
 function App() {
+  // [data, isLoading, error] = useFetch();
   const [data, setData] = useState<ApiSchema[]>(apiData);
   const tableData: Character[] = data.map((e, i) => {
     return { 

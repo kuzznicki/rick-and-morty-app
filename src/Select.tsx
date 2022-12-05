@@ -1,4 +1,4 @@
-import './Select.css';
+import '@/styles/Select.scss';
 
 type SelectProps = {
     options: string[],
