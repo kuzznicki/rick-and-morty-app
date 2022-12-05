@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import CharactersTable from './CharactersTable';
 import SearchInput from './SearchInput';
-import Select from './Select';
+import MultiSelect from './MultiSelect';
 import { ApiSchema, Character, Status } from '@/types';
 import { getTempApiData, unique } from '@/utils';
 import '@/styles/App.scss'
@@ -16,11 +16,12 @@ import Pagination from './Pagination';
  * useFetch
  * usePagination
  * 
- * 1. pagination
- * 2. useTooltip
- * 3. global style
- * 4. refactor styles
- * 5. code review
+ * 1. pagination - done
+ * 2. multiple select - done
+ * 3. useTooltip
+ * 4. global style
+ * 5. refactor styles
+ * 6. code review
  * 
  */
 
@@ -41,16 +42,21 @@ function App() {
     };
   });
   const [displayedData, setDisplayedData] = useState(tableData.slice(0, perPage));
-  const speciesOptions = unique(apiData.map(e => e.species));
+  const speciesOptions = unique(apiData.map(e => e.species)).map(e => ({ value: e.toLowerCase(), label: e }));
 
-  function filterCharacters(key: keyof Character, query: string, exactMatch: boolean = false) {
+  function filterCharacters(key: keyof Character, query: string | string[], exactMatch: boolean = false) {
     if (!query.length) {
       setDisplayedData([...tableData]);  
     } else {
       const matched = tableData.filter(e => {
         const value = (e[key] as string).toLowerCase();
-        const queryLower = query.toLowerCase();
-        return exactMatch ? value === queryLower : value.includes(queryLower);
+        const queriesLower = typeof query === 'string'
+          ? [query.toLowerCase()]
+          : query.map(q => q.toLowerCase());
+
+        return exactMatch 
+          ? queriesLower.some(q => q === value) 
+          : queriesLower.some(q => value.includes(q));
       });
       
       setDisplayedData(matched);
@@ -68,10 +74,10 @@ function App() {
 
         <div className="filters">
           <SearchInput id="search" name="search" onChange={query => filterCharacters('name', query)} />
-          <Select 
+          <MultiSelect
             placeholder="Species"
-            options={speciesOptions} 
-            onChange={species => filterCharacters('species', species, true)}
+            options={speciesOptions}
+            onChange={values => filterCharacters('species', values)}
           />
         </div>
       
