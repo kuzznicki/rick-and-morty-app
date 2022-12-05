@@ -35,14 +35,14 @@ table {
             border-top: 1px solid $secondaryBluePale30;
             padding: 16px 16px 16px 0;
             white-space: nowrap;
-            overflow: hidden;
+            // overflow: hidden;
             text-overflow: ellipsis;
             
             & .species { color: $primaryAnthracite80; }
             &.unknown { color: $primaryAnthracite70; }
         }
 
-        td > span {
+        td span {
             display: block;
             white-space: nowrap;
             overflow: hidden;

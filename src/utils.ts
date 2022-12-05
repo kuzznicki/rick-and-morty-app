@@ -1,7 +1,15 @@
+import React, { ReactElement, ReactNode } from "react";
 import { ApiSchema } from "./types";
 
 export function unique(arr: any[]) {
     return arr.filter((e, i, a) => a.indexOf(e) === i);
+}
+
+export function getReactElementText(node: ReactElement | string): string {
+    if (typeof node === 'string') return String(node);
+    if (node instanceof Array) return node.map(getReactElementText).join('');
+    if (typeof node === 'object' && node) return getReactElementText(node.props.children);
+    return '';
 }
 
 export function getTempApiData(): ApiSchema[] {

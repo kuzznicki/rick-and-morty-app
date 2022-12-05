@@ -1,56 +1,42 @@
-import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
-import ReactTooltip from "react-tooltip";
+import { MutableRefObject, ReactElement, ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
+import '@/styles/components/Tooltip.scss';
+import { getReactElementText } from "@/utils";
 
 type Props = {
-    children: ReactNode;
+    children: ReactElement | string;
 };
 
 export default function Tooltip({ children }: Props) {
-    const [showTooltip, setShowTooltip] = useState(false);
-    const ref = useRef(children);
-    console.log(ref);
+    const ref = useRef(null);
+    const isOverflowing = useCheckOverflow(ref);
 
+    const className = 'tooltip-wrapper' + (isOverflowing ? ' overflowing' : '');
+    const tooltipText = getReactElementText(children);
 
     return (
-        <>
-            <span>{showTooltip ? 'show' : 'hide'}</span>
-            <OverflowTester onChange={isOverflowing => setShowTooltip(isOverflowing)}>
-                {children}
-            </OverflowTester>
-        </>
+        <div className={className} data-tooltip={tooltipText}>
+            <span ref={ref}>{children}</span>
+        </div>
     );
 }
 
-type OverflowTesterProps = {
-    children: ReactNode;
-    onChange: (isOverflowing: boolean) => void;
-};
-
-function OverflowTester({ children, onChange }: OverflowTesterProps) {
+function useCheckOverflow(ref: MutableRefObject<HTMLElement | null>) {
     const [isOverflowing, setIsOverflowing] = useState(false);
-    const ref = useRef(null);
+
+    function checkOverflow(el: HTMLElement | null) {
+        return !!el && el.clientWidth < el.scrollWidth;
+    }
 
     useEffect(() => setIsOverflowing(checkOverflow(ref.current)), []);
-    useEffect(() => onChange(isOverflowing), [isOverflowing]);
+    
     useLayoutEffect(() => {
         const handleResize = () => {
-            const overflowing = checkOverflow(ref.current);
-            if (overflowing !== isOverflowing) {
-                onChange(overflowing);
-                setIsOverflowing(overflowing);
-            }
-        }
-
+            console.log('handle resize')
+            setIsOverflowing(checkOverflow(ref.current))
+        };
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    });
 
-    return (
-        <span className="overflow-tester" ref={ref}>{children}</span>
-    );
-}
-
-function checkOverflow(el: HTMLElement | null) {
-    if (!el) return false;
-    return el.clientWidth < el.scrollWidth;
+    return isOverflowing;
 }

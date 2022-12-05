@@ -1,0 +1,62 @@
+@use '../variables' as *;
+
+.span-wrapper {
+    overflow: auto;
+}
+
+.tooltip-wrapper {
+    position: relative;
+    $tooltipArrowSize: 15px;
+    $tooltipColor: #d5e6fb;
+
+    &.overflowing {
+        &::before,
+        &::after {
+            position: absolute;
+            top: -0.75rem;
+            left: 50%;
+            
+            opacity: 0;
+            transition: 150ms transform, 150ms opacity;
+            transform-origin: bottom center;
+        }
+
+        &::after {
+            content: '';
+            border: $tooltipArrowSize solid transparent;
+            transform: translate(-50%, 0) scale(0);
+            border-top-color: $tooltipColor;
+            transform-origin: top center;
+        }
+
+        &:hover::after {
+            transform: translate(-50%, -$tooltipArrowSize) scale(1);
+            opacity: 1;
+        }
+
+        &::before {
+            // content: 'Very long text that should not fit in just one line. Macos tooltip wrapper emoji jupyter debug console';
+            content: attr(data-tooltip);
+            
+            color: $primaryAnthracite80;
+            background: $tooltipColor;
+            
+            height: max-content;
+            width: max-content;
+            max-width: min(300px, 70vw);
+            padding: 12px;
+            text-align: center;
+            
+            transform: translate(-50%, calc(-50% - $tooltipArrowSize)) scale(0);
+            border-radius: $borderRadius;
+
+            white-space: break-spaces;
+        }
+
+
+        &:hover::before {
+            transform: translate(-50%, calc(-100% - $tooltipArrowSize)) scale(1);
+            opacity: 1;
+        }
+    }
+}
