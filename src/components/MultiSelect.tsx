@@ -23,7 +23,7 @@ export default function MultiSelect({ options, placeholder, onChange }: SelectPr
                     primary: cssVars.inputFocusColor,
                     primary25: cssVars.secondaryBluePale10,
                     primary50: cssVars.secondaryBluePale30,
-                    neutral10: cssVars.primaryAnthracite80,
+                    neutral10: cssVars.secondaryBluePale15,
                     neutral80: cssVars.primaryAnthracite80,
                     neutral20: cssVars.inputBorderColor,
                 }
