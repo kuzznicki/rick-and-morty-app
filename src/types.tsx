@@ -24,11 +24,10 @@ export type ApiCharacterSchema = {
     id: number
     name: string
     image: string
-    origin: { name: string, [k: string]: any }
+    origin: { name: string }
     gender: Gender
     status: Status
     species: string
-    [k: string]: any // todo: remove this after implementing fetch
 };
 
 export function assertApiCharacterSchema(val: ApiCharacterSchema): asserts val {
