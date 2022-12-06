@@ -51,7 +51,6 @@ export default function useCharactersApi(filters: ApiFilters, options: Options) 
     const perPageInUi = isPerPage(options.perPage) ? options.perPage : API_PER_PAGE;
 
     useEffect(() => {
-        console.log('filters', filters);
         getData(filters);
     }, [filters])
 

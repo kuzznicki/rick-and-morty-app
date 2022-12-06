@@ -19,13 +19,12 @@ function App() {
   const { characters, totalPages } = data;
 
   function handlePageChange(pageNumber: number) {
-    console.log('change page', pageNumber);
     setApiFilters(f => ({...f, page: pageNumber }));
   }
 
   return (
     <div className="App">
-      <h1>Characters {JSON.stringify(apiFilters)} - pages: {totalPages} - error: {String(error)}</h1>
+      <h1>Characters</h1>
 
       <div className="filters">
         <SearchInput 
