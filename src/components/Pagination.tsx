@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import '@/styles/components/Pagination.scss';
 import chevronLeft from '@/assets/chevron-left.svg';
 import chevronRight from '@/assets/chevron-right.svg';
@@ -23,6 +23,8 @@ export default function Pagination({ itemsCount, perPage, initialPage = 1, onCha
     const first3 = [1, 2, 3].filter(isValidPageNumber);
     const last3 = [-2, -1, 0].map(e => e + lastPage).filter(e => isValidPageNumber(e) && !first3.includes(e));
     const mid3 = [-1, 0, 1].map(e => e + page).filter(e => isValidPageNumber(e) && ![...first3, ...last3].includes(e));
+
+    useEffect(() => changePage(1), [itemsCount]);
 
     function isValidPageNumber(pageNumber: number) {
         return Number.isInteger(pageNumber)
@@ -64,9 +66,12 @@ export default function Pagination({ itemsCount, perPage, initialPage = 1, onCha
                 <img src={chevronLeft} />
             </button>
             {numbersToButtons(first3)}
+            
             {isSeparatorNeeded(first3, mid3) && <Separator />}
             {numbersToButtons(mid3)}
             {isSeparatorNeeded(mid3, last3) && <Separator />}
+
+            {mid3.length === 0 && isSeparatorNeeded(first3, last3) && <Separator />}
             {numbersToButtons(last3)}
             <button disabled={page >= lastPage} onClick={() => changePage(page + 1)}>
                 <img src={chevronRight} />
