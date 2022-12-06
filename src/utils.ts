@@ -12,6 +12,10 @@ export function getReactElementText(node: ReactElement | string): string {
     return '';
 }
 
+export function checkOverflow(el: HTMLElement | null) {
+    return !!el && el.clientWidth < el.scrollWidth;
+}
+
 export function apiDataToCharacters(data: ApiSchema[]) {
     return data.map(record => {
         return {
