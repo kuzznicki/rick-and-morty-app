@@ -1,5 +1,5 @@
 import { ReactElement, useRef } from "react";
-import { useCheckOverflow } from "@/hooks/useCheckOverflow";
+import useCheckOverflow from "@/hooks/useCheckOverflow";
 import { getReactElementText } from "@/utils";
 import '@/styles/components/Tooltip.scss';
 

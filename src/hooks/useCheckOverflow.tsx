@@ -1,7 +1,7 @@
 import { MutableRefObject, useEffect, useLayoutEffect, useState } from "react";
 import { checkOverflow } from "@/utils";
 
-export function useCheckOverflow(ref: MutableRefObject<HTMLElement | null>) {
+export default function useCheckOverflow(ref: MutableRefObject<HTMLElement | null>) {
     const [isOverflowing, setIsOverflowing] = useState(false);
 
     useEffect(() => setIsOverflowing(checkOverflow(ref.current)), []);

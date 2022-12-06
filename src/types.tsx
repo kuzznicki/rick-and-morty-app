@@ -1,5 +1,15 @@
-export type Status = 'Alive' | 'Dead' | 'unknown';
-export type Gender = 'Female' | 'Male' | 'Genderless' | 'unknown';
+const status = ['Alive', 'Dead', 'unknown'] as const; 
+export type Status = typeof status[number];
+export function isStatus(val: string): val is Status {
+    return status.includes(val as Status);
+}
+
+const gender = ['Female', 'Male', 'Genderless', 'unknown'] as const;
+export type Gender = typeof gender[number];
+export function isGender(val: string): val is Gender {
+    return gender.includes(val as Gender);
+}
+
 export type Character = {
     id: number
     name: string
@@ -10,7 +20,7 @@ export type Character = {
     status: Status
 };
 
-export type ApiSchema = {
+export type ApiCharacterSchema = {
     id: number
     name: string
     image: string
@@ -18,5 +28,26 @@ export type ApiSchema = {
     gender: Gender
     status: Status
     species: string
-    [k: string]: any
+    [k: string]: any // todo: remove this after implementing fetch
 };
+
+export function assertApiCharacterSchema(val: ApiCharacterSchema): asserts val {
+    if (
+        typeof val !== 'object' ||
+        typeof val.id !== 'number' ||
+        typeof val.name !== 'string' ||
+        typeof val.image !== 'string' ||
+        typeof val.origin !== 'object' ||
+        typeof val.origin.name !== 'string' ||
+        !isGender(val.gender) ||
+        !isStatus(val.status) ||
+        typeof val.species !== 'string'
+    ) throw new Error('API Schema not matched');
+}
+
+export type ApiResponse = {
+    info: { count: number },
+    results: ApiCharacterSchema[]
+};
+
+export type ApiFilters = { name?: string, species?: string[], page?: number };
