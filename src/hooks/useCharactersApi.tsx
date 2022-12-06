@@ -1,5 +1,5 @@
 import { ApiCharacterSchema, ApiFilters, ApiResponse, assertApiCharacterSchema, Character, isApiResponse } from "@/types";
-import { apiDataToCharacters } from "@/utils";
+import { apiDataToCharacters, appendPageParamToUrl } from "@/utils";
 import { useEffect, useReducer, useState } from "react";
 
 const DEFAULT_DATA = { characters: [], totalPages: 0 };
@@ -24,15 +24,19 @@ type FetchAction =
 function fetchReducer(state: FetchState, action: FetchAction): FetchState {
     switch (action.type) {
         case 'loading':
-            return { isLoading: true, data: { 
-                characters: [], 
-                totalPages: state.data.totalPages
-            }};
+            return {
+                isLoading: true, data: {
+                    characters: [],
+                    totalPages: state.data.totalPages
+                }
+            };
         case 'complete':
-            return { isLoading: false, data: { 
-                characters: action.payload.characters, 
-                totalPages: action.payload.totalPages || state.data.totalPages
-            }};
+            return {
+                isLoading: false, data: {
+                    characters: action.payload.characters,
+                    totalPages: action.payload.totalPages || state.data.totalPages
+                }
+            };
         case 'error':
             return { isLoading: false, data: DEFAULT_DATA, error: action.payload };
         default:
@@ -43,8 +47,8 @@ function fetchReducer(state: FetchState, action: FetchAction): FetchState {
 export default function useCharactersApi(filters: ApiFilters, options: Options) {
     const [apiCache, setApiCache] = useState<Record<string, ApiResponse>>({});
     const [state, dispatch] = useReducer(fetchReducer, { isLoading: true, data: DEFAULT_DATA });
-    
-    const uiPerPage = isPerPage(options.perPage) ? options.perPage : API_PER_PAGE;
+
+    const perPageInUi = isPerPage(options.perPage) ? options.perPage : API_PER_PAGE;
 
     useEffect(() => {
         console.log('filters', filters);
@@ -52,7 +56,7 @@ export default function useCharactersApi(filters: ApiFilters, options: Options) 
     }, [filters])
 
     return state;
-    
+
 
     async function getData(filters: ApiFilters) {
         try {
@@ -70,19 +74,6 @@ export default function useCharactersApi(filters: ApiFilters, options: Options) 
         }
     }
 
-    function uiPageToApiPage(uiPage: number): number {
-        return Math.ceil(uiPage * uiPerPage / API_PER_PAGE);
-    }
-
-    function getCharactersToSkipOnPage(uiPage: number = 1): number {
-        return !uiPage ? 0 : ((uiPage - 1) * uiPerPage) % API_PER_PAGE;
-    }
-
-    async function getTotalCountForEndpoint(endpoint: string): Promise<number> {
-        const [count] = await getDataForEndpoint(endpoint)
-        return count;
-    }
-
     async function getDataForEndpoint(endpoint: string): Promise<[number, Character[]]> {
         if (apiCache[endpoint]) {
             const res = apiCache[endpoint];
@@ -96,10 +87,10 @@ export default function useCharactersApi(filters: ApiFilters, options: Options) 
         dispatch({ type: 'loading' });
 
         const response = await fetch(endpoint);
-        
+
         if (!response.ok) throw new Error(response.statusText);
         const data = await response.json() as ApiResponse;
-            
+
         if (!isApiResponse(data)) {
             throw new Error('Failed to get data from the API');
         }
@@ -126,27 +117,30 @@ export default function useCharactersApi(filters: ApiFilters, options: Options) 
 
     async function handleSingleEndpoint(endpoint: string, pageFilter?: number): Promise<void> {
         const url = new URL(endpoint);
-        
+
         if (typeof pageFilter === 'number') {
             url.searchParams.append('page', String(uiPageToApiPage(pageFilter)));
         }
-        
+
         const [totalCount, characters] = await getDataForEndpoint(url.href);
 
-        const skip = getCharactersToSkipOnPage(pageFilter);
-        dispatch({ type: 'complete', payload: { 
-            characters: characters.slice(skip, skip + uiPerPage),
-            totalPages: Math.ceil(totalCount / uiPerPage)
-        }});
+        const skip = getRecordsToSkip(pageFilter) % API_PER_PAGE;
+        dispatch({
+            type: 'complete', payload: {
+                characters: characters.slice(skip, skip + perPageInUi),
+                totalPages: Math.ceil(totalCount / perPageInUi)
+            }
+        });
     }
 
     async function handleMultipleEndpoints(endpoints: string[], pageFilter?: number): Promise<void> {
-        const recordsToSkip = ((pageFilter || 1) - 1) * uiPerPage;
+        const recordsToSkip = getRecordsToSkip(pageFilter);
+
         const data: Character[] = [];
         let totalCount = 0;
 
         for (const endpoint of endpoints) {
-            const cnt = await getTotalCountForEndpoint(endpoint);
+            const [cnt] = await getDataForEndpoint(endpoint);
             totalCount += cnt;
             const apiPages = Math.ceil(cnt / API_PER_PAGE);
 
@@ -161,15 +155,19 @@ export default function useCharactersApi(filters: ApiFilters, options: Options) 
             }
         }
 
-        dispatch({ type: 'complete', payload: { 
-            characters: data.slice(recordsToSkip, recordsToSkip + uiPerPage),
-            totalPages: Math.ceil(totalCount / uiPerPage)
-        }});
+        dispatch({
+            type: 'complete', payload: {
+                characters: data.slice(recordsToSkip, recordsToSkip + perPageInUi),
+                totalPages: Math.ceil(totalCount / perPageInUi)
+            }
+        });
     }
 
-    function appendPageParamToUrl(endpoint: string, page: number): string {
-        const url = new URL(endpoint);
-        url.searchParams.append('page', page+'');
-        return url.href;
+    function uiPageToApiPage(uiPage: number): number {
+        return Math.ceil(uiPage * perPageInUi / API_PER_PAGE);
+    }
+
+    function getRecordsToSkip(uiPage: number = 1): number {
+        return !uiPage ? 0 : ((uiPage - 1) * perPageInUi);;
     }
 }

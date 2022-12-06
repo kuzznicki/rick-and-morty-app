@@ -35,3 +35,9 @@ export function apiDataToCharacters(data: ApiCharacterSchema[]) {
         };
     });
 }
+
+export function appendPageParamToUrl(endpoint: string, page: number): string {
+    const url = new URL(endpoint);
+    url.searchParams.append('page', page+'');
+    return url.href;
+}
