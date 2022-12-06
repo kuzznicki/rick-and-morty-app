@@ -10,7 +10,8 @@ export default function Tooltip({ children }: Props) {
     const isOverflowing = useCheckOverflow(ref);
 
     return (
-        <div data-tooltip={getReactElementText(children)}
+        <div 
+            data-tooltip={getReactElementText(children)}
             className={'tooltip-wrapper' + (isOverflowing ? ' overflowing' : '')} 
             >
             <span ref={ref}>{children}</span>

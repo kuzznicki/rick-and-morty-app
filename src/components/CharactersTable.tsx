@@ -67,21 +67,21 @@ export default function CharactersTable({ data }: Props) {
                                 />
                             </td>
                             <td>
-                                <span className="name">[{id}] {name}</span>
-                                <span className="species">{species}</span>
+                                <span className="name"><Tooltip>{id + ' ' + name}</Tooltip></span>
+                                <span className="species"><Tooltip>{species}</Tooltip></span>
                             </td>
-                            <td><Avatar source={avatar} name={name} /></td>
-                            
-                            
+                            <td>
+                                <Avatar source={avatar} name={name} />
+                            </td>
                             <td className={originClass}>
                                 <Tooltip>{origin}</Tooltip>
                             </td>
-                            
-                            
                             <td>
-                                <span>{gender}</span>
+                                <Tooltip>{gender}</Tooltip>
                             </td>
-                            <td><StatusBadge status={status}/></td>
+                            <td>
+                                <StatusBadge status={status}/>
+                            </td>
                         </tr>
                     );
                 })}

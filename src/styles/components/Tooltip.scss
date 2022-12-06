@@ -6,6 +6,9 @@
 
 .tooltip-wrapper {
     position: relative;
+    display: flex;
+    min-width: 0;
+    
     $tooltipArrowSize: 15px;
     $tooltipColor: #d5e6fb;
 

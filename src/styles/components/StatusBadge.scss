@@ -2,7 +2,17 @@
 
 .status-badge {
     display: flex;
+    align-items: center;
     gap: 0.5rem;
+
+    & * {
+        float: left;
+    }
+
+    .icon {
+        width: 18px;
+        height: 18px;
+    }
 
     .label {
         font-size: 14px;
