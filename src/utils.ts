@@ -2,13 +2,9 @@ import { ReactElement } from "react";
 import { ApiCharacterSchema } from "./types";
 
 export function getSpeciesOptions() {
-    // docs page does not mention available species so I needed to hard code them 
+    // docs page does not mention available species so I needed to hardcode them 
     const species = ["Human","Alien","Humanoid","unknown","Poopybutthole","Mythological Creature","Animal","Robot","Cronenberg","Disease"]
-    return species.map(e => ({ value: e.toLowerCase(), label: e }));
-}
-
-export function unique(arr: any[]) {
-    return arr.filter((e, i, a) => a.indexOf(e) === i);
+    return species.sort().map(e => ({ value: e.toLowerCase(), label: e }));
 }
 
 export function getReactElementText(node: ReactElement | string): string {
@@ -36,8 +32,8 @@ export function apiDataToCharacters(data: ApiCharacterSchema[]) {
     });
 }
 
-export function appendPageParamToUrl(endpoint: string, page: number): string {
+export function appendParamToUrl(endpoint: string, param: string, value: string | number): string {
     const url = new URL(endpoint);
-    url.searchParams.append('page', page+'');
+    url.searchParams.append(param, value+'');
     return url.href;
 }

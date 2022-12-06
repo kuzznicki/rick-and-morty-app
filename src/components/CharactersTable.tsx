@@ -67,7 +67,7 @@ export default function CharactersTable({ data }: Props) {
                                 />
                             </td>
                             <td>
-                                <span className="name"><Tooltip>{id + ' ' + name}</Tooltip></span>
+                                <span className="name"><Tooltip>{name}</Tooltip></span>
                                 <span className="species"><Tooltip>{species}</Tooltip></span>
                             </td>
                             <td>
