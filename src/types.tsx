@@ -50,4 +50,19 @@ export type ApiResponse = {
     results: ApiCharacterSchema[]
 };
 
+export function isApiResponse(val: ApiResponse): val is ApiResponse {
+    try {
+        if (!Array.isArray(val.results)) return false;
+        val.results.forEach(assertApiCharacterSchema);
+        return (
+            typeof val === 'object' &&
+            typeof val.info === 'object' &&
+            typeof val.info.count === 'number'
+        );
+    } catch (e) {
+        return false;
+    }
+    
+}
+
 export type ApiFilters = { name?: string, species?: string[], page?: number };

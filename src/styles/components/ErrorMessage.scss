@@ -1,0 +1,30 @@
+@use '../variables' as *;
+
+.error-indicator {
+    text-align: center;
+    margin: 2rem auto;
+    @include fadeIn;
+
+    & img {
+        height: 7rem;
+        margin: 2rem;
+    }
+
+    & .error-text {
+        font-size: 1.5rem;
+    }
+
+    .debug-info {
+        max-width: 0.7 * $maxAppWidth;
+        margin-top: 1rem;
+        padding: 1rem;
+        font-family: monospace;
+        line-height: 1.2rem;
+        border: $inputBorder;
+        border-radius: $borderRadius;
+        background: white;
+    }
+}
+
+
+

@@ -1,3 +1,5 @@
+$maxAppWidth: 1366px;
+
 $primaryBlueLight: #F5F8FD;
 $primaryAnthracite100: #1A2328;
 $primaryAnthracite80: #484F53;
@@ -29,4 +31,14 @@ $avatarBorderColor: $secondaryBluePale15;
     height: 40px;
     min-width: 40px;
     margin: 0 2px;
+}
+
+@mixin fadeIn {
+    opacity: 0;
+    animation: opacity 0.3s forwards 0.1s;
+
+    @keyframes opacity {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
 }

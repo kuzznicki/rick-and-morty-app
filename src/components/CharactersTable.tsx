@@ -67,7 +67,7 @@ export default function CharactersTable({ data }: Props) {
                                 />
                             </td>
                             <td>
-                                <span className="name">{name}</span>
+                                <span className="name">[{id}] {name}</span>
                                 <span className="species">{species}</span>
                             </td>
                             <td><Avatar source={avatar} name={name} /></td>

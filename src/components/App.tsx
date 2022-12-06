@@ -7,39 +7,26 @@ import { getTempApiData, unique } from '@/utils';
 import '@/styles/components/App.scss'
 import Pagination from './Pagination';
 import useCharactersApi from '@/hooks/useCharactersApi';
+import Loading from './Loading';
+import ErrorMessage from './ErrorMessage';
 
-/**
- * 1. pagination - done
- * 2. multiple select - done
- * 3. useTooltip - done
- * 4. global style - done
- * 5. refactor styles - done
- * 6. code review
- * 7. refactor pagination - done
- * 8. 1 2 3 ... -2 -1 0 pages issue - done
- */
-
-const apiData = getTempApiData();
-
+const PER_PAGE = 5;
 
 function App() {
   const [apiFilters, setApiFilters] = useState<ApiFilters>({ name: '', species: [] });
-  const { data, isLoading, error } = useCharactersApi(apiFilters);
+  const { data, isLoading, error } = useCharactersApi(apiFilters, { perPage: PER_PAGE });
   const { characters, totalPages } = data;
 
-  // const speciesOptions = unique(apiData.map(e => e.species)).map(e => ({ value: e.toLowerCase(), label: e }));
-  
-  // const [displayedData, setDisplayedData] = useState(filteredTableData.slice(0, perPage));
-  
   console.log('data (isLoading:' + isLoading + ')', data);
 
   function handlePageChange(pageNumber: number) {
+    console.log('change page', pageNumber);
     setApiFilters(f => ({...f, page: pageNumber }));
   }
 
   return (
     <div className="App">
-      <h1>Characters {JSON.stringify(apiFilters)} - pages: {totalPages}</h1>
+      <h1>Characters {JSON.stringify(apiFilters)} - pages: {totalPages} - error: {String(error)}</h1>
 
       <div className="filters">
         <SearchInput 
@@ -55,17 +42,16 @@ function App() {
       </div>
       
       <div className="content">
-        { isLoading ? (
-          <h1>Loading...</h1>
-        ) : (
-          <>
-            <CharactersTable data={characters} />
-            <Pagination 
-              totalPages={totalPages || 1}
-              onChange={n => {}}
-            />
-          </>
-        )}
+        { error 
+          ? <ErrorMessage debugInfo={String(error)} /> : isLoading 
+          ? <Loading message="Loading characters..." />
+          : <CharactersTable data={characters} />
+        }
+        <Pagination
+          visible={!isLoading && !error}
+          totalPages={totalPages || 1}
+          onChange={handlePageChange}
+        />
       </div>
     </div>
   )

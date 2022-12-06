@@ -1,6 +1,8 @@
+@use '../variables' as *;
+
 .App {
   padding: 55px;
-  max-width: 1366px;
+  max-width: $maxAppWidth;
   margin: auto;
 
   h1 {

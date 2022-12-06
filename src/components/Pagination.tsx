@@ -7,13 +7,14 @@ type PagesHelperArray = (number | '...')[];
 type Props = {
     totalPages: number
     initialPage?: number
+    visible?: boolean
     onChange: (pageNumber: number) => void
 };
 
-export default function Pagination({ totalPages, initialPage = 1, onChange }: Props) {
+export default function Pagination({ totalPages, initialPage = 1, visible = true, onChange }: Props) {
     const [page, setPage] = useState(initialPage);
 
-    useEffect(() => changePage(1), [totalPages]);
+    useEffect(() => { changePage(1) }, [totalPages]);
 
     function isValidPageNumber(pageNumber: number) {
         return Number.isInteger(pageNumber)
@@ -64,7 +65,7 @@ export default function Pagination({ totalPages, initialPage = 1, onChange }: Pr
     }
 
     return (
-        <div className="pagination" style={{ marginTop: '43px' }}>
+        <div className="pagination" style={{ marginTop: '43px', visibility: visible ? 'visible' : 'hidden' }}>
             <button disabled={page <= 1} onClick={() => changePage(page - 1)}>
                 <img src={chevronLeft} />
             </button>

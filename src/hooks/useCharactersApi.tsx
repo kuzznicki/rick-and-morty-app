@@ -1,10 +1,18 @@
-import { ApiCharacterSchema, ApiFilters, ApiResponse, assertApiCharacterSchema, Character } from "@/types";
+import { ApiCharacterSchema, ApiFilters, ApiResponse, assertApiCharacterSchema, Character, isApiResponse } from "@/types";
 import { apiDataToCharacters } from "@/utils";
 import { useEffect, useReducer, useState } from "react";
 
 const DEFAULT_DATA = { characters: [], totalPages: 0 };
-const API_URL = 'https://rickandmortyapi.com/api/character';
-const PER_PAGE = 20;
+const API_URL = 'https://api.coingecko.com/api/v3/ping'; //'https://rickandmortyapi.com/api/character/';
+const API_PER_PAGE = 20;
+
+const allowedPerPageValues = [1, 2, 4, 5, 10, 20] as const;
+type PerPage = typeof allowedPerPageValues[number];
+function isPerPage(val: any): val is PerPage {
+    return allowedPerPageValues.includes(val);
+}
+
+type Options = { perPage?: PerPage };
 
 type StateData = { characters: Character[], totalPages?: number };
 type FetchState = { isLoading: boolean, data: StateData, error?: Error };
@@ -32,35 +40,42 @@ function fetchReducer(state: FetchState, action: FetchAction): FetchState {
     }
 }
 
-export default function useCharactersApi(filters: ApiFilters) {
+export default function useCharactersApi(filters: ApiFilters, options: Options) {
     const [apiCache, setApiCache] = useState<Record<string, ApiResponse>>({});
     const [state, dispatch] = useReducer(fetchReducer, { isLoading: true, data: DEFAULT_DATA });
+    
+    const uiPerPage = isPerPage(options.perPage) ? options.perPage : API_PER_PAGE;
 
     useEffect(() => {
         console.log('filters', filters);
         getData(filters);
     }, [filters])
 
-    async function getData(filters: ApiFilters) {
-        dispatch({ type: 'loading' });
+    return state;
+    
 
+    async function getData(filters: ApiFilters) {
         try {
             // can't pass multiple species so need to generate separate endpoints
             const endpoints = getEndpointsByFilters(filters);
-            const pageFilter = filters.page;
-
             if (endpoints.length === 1) {
-                const url = new URL(endpoints[0]);
-                if (pageFilter) url.searchParams.append('page', pageFilter+'');
-                return handleSingleEndpoint(url.href);
+                return await handleSingleEndpoint(endpoints[0], filters.page);
             }
 
             // for multiple endpoints, we need to calculate requests for specific page based on `info.count` from response 
-            handleMultipleEndpoints(endpoints, pageFilter);
+            await handleMultipleEndpoints(endpoints, filters.page);
 
         } catch (e) {
             dispatch({ type: 'error', payload: e as Error });
         }
+    }
+
+    function uiPageToApiPage(uiPage: number): number {
+        return Math.ceil(uiPage * uiPerPage / API_PER_PAGE);
+    }
+
+    function getCharactersToSkipOnPage(uiPage: number = 1): number {
+        return !uiPage ? 0 : ((uiPage - 1) * uiPerPage) % API_PER_PAGE;
     }
 
     async function getTotalCountForEndpoint(endpoint: string): Promise<number> {
@@ -78,20 +93,23 @@ export default function useCharactersApi(filters: ApiFilters) {
     }
 
     async function fetchDataFromApi(endpoint: string): Promise<[number, Character[]]> {
-        return fetch(endpoint).then(response => {
-            if (!response.ok) throw new Error(response.statusText);
-            return response.json();
+        dispatch({ type: 'loading' });
+
+        const response = await fetch(endpoint);
+        
+        if (!response.ok) throw new Error(response.statusText);
+        const data = await response.json() as ApiResponse;
             
-        }).then((data: ApiResponse) => {
-            // todo: validate api response
+        if (!isApiResponse(data)) {
+            throw new Error('Failed to get data from the API');
+        }
 
-            const results = data.results as ApiCharacterSchema[];
-            results.forEach(assertApiCharacterSchema);
-            const characters = apiDataToCharacters(results);
+        const results = data.results as ApiCharacterSchema[];
+        results.forEach(assertApiCharacterSchema);
+        const characters = apiDataToCharacters(results);
 
-            setApiCache(cache => ({ ...cache, [endpoint]: data }));
-            return [data.info.count, characters];
-        });
+        setApiCache(cache => ({ ...cache, [endpoint]: data }));
+        return [data.info.count, characters];
     }
 
     function getEndpointsByFilters(filters: ApiFilters): string[] {
@@ -106,32 +124,39 @@ export default function useCharactersApi(filters: ApiFilters) {
         });
     }
 
-    async function handleSingleEndpoint(endpoint: string): Promise<void> {
-        const [totalCount, characters] = await getDataForEndpoint(endpoint);
+    async function handleSingleEndpoint(endpoint: string, pageFilter?: number): Promise<void> {
+        const url = new URL(endpoint);
+        
+        if (typeof pageFilter === 'number') {
+            url.searchParams.append('page', String(uiPageToApiPage(pageFilter)));
+        }
+        
+        const [totalCount, characters] = await getDataForEndpoint(url.href);
 
+        const skip = getCharactersToSkipOnPage(pageFilter);
         dispatch({ type: 'complete', payload: { 
-            characters: characters,
-            totalPages: Math.ceil(totalCount / PER_PAGE)
+            characters: characters.slice(skip, skip + uiPerPage),
+            totalPages: Math.ceil(totalCount / uiPerPage)
         }});
     }
 
     async function handleMultipleEndpoints(endpoints: string[], pageFilter?: number): Promise<void> {
         const data: Character[] = []
-        let recordsToSkipLeft = ((pageFilter || 1) - 1) * PER_PAGE;
+        let recordsToSkipLeft = ((pageFilter || 1) - 1) * uiPerPage;
         let totalCount = 0;
 
         for (const endpoint of endpoints) {
             const endpointTotalCount = await getTotalCountForEndpoint(endpoint);
             totalCount += endpointTotalCount;
             
-            if (data.length > PER_PAGE) continue;
+            if (data.length > uiPerPage) continue;
 
             if (endpointTotalCount > recordsToSkipLeft) {
-                const pageToRequest = Math.ceil(recordsToSkipLeft / PER_PAGE);
+                const pageToRequest = Math.ceil(recordsToSkipLeft / uiPerPage);
                 recordsToSkipLeft = 0;
 
                 const url = new URL(endpoint);
-                if (pageToRequest) url.searchParams.append('page', pageToRequest+'');
+                if (pageToRequest) url.searchParams.append('page', String(uiPageToApiPage(pageToRequest)));
 
                 const [, pageCharacters] = await getDataForEndpoint(url.href);
                 data.push(...pageCharacters);
@@ -140,11 +165,10 @@ export default function useCharactersApi(filters: ApiFilters) {
             }
         }
 
+        const skip = getCharactersToSkipOnPage(pageFilter);
         dispatch({ type: 'complete', payload: { 
-            characters: data.slice(0, PER_PAGE),
-            totalPages: Math.ceil(totalCount / PER_PAGE)
+            characters: data.slice(skip, skip + uiPerPage),
+            totalPages: Math.ceil(totalCount / uiPerPage)
         }});
     }
-
-    return state;
 }
