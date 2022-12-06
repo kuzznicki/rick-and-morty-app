@@ -3,7 +3,7 @@ import { apiDataToCharacters } from "@/utils";
 import { useEffect, useReducer, useState } from "react";
 
 const DEFAULT_DATA = { characters: [], totalPages: 0 };
-const API_URL = 'https://api.coingecko.com/api/v3/ping'; //'https://rickandmortyapi.com/api/character/';
+const API_URL = 'https://rickandmortyapi.com/api/character/';
 const API_PER_PAGE = 20;
 
 const allowedPerPageValues = [1, 2, 4, 5, 10, 20] as const;
@@ -141,34 +141,35 @@ export default function useCharactersApi(filters: ApiFilters, options: Options) 
     }
 
     async function handleMultipleEndpoints(endpoints: string[], pageFilter?: number): Promise<void> {
-        const data: Character[] = []
-        let recordsToSkipLeft = ((pageFilter || 1) - 1) * uiPerPage;
+        const recordsToSkip = ((pageFilter || 1) - 1) * uiPerPage;
+        const data: Character[] = [];
         let totalCount = 0;
 
         for (const endpoint of endpoints) {
-            const endpointTotalCount = await getTotalCountForEndpoint(endpoint);
-            totalCount += endpointTotalCount;
-            
-            if (data.length > uiPerPage) continue;
+            const cnt = await getTotalCountForEndpoint(endpoint);
+            totalCount += cnt;
+            const apiPages = Math.ceil(cnt / API_PER_PAGE);
 
-            if (endpointTotalCount > recordsToSkipLeft) {
-                const pageToRequest = Math.ceil(recordsToSkipLeft / uiPerPage);
-                recordsToSkipLeft = 0;
+            if (data.length > recordsToSkip + API_PER_PAGE) continue;
 
-                const url = new URL(endpoint);
-                if (pageToRequest) url.searchParams.append('page', String(uiPageToApiPage(pageToRequest)));
+            for (let page = 1; page <= apiPages; page++) {
+                const pageEndpoint = appendPageParamToUrl(endpoint, page);
+                const [, characters] = await getDataForEndpoint(pageEndpoint);
+                data.push(...characters);
 
-                const [, pageCharacters] = await getDataForEndpoint(url.href);
-                data.push(...pageCharacters);
-            } else {
-                recordsToSkipLeft -= endpointTotalCount;
+                if (data.length > recordsToSkip + API_PER_PAGE) break;
             }
         }
 
-        const skip = getCharactersToSkipOnPage(pageFilter);
         dispatch({ type: 'complete', payload: { 
-            characters: data.slice(skip, skip + uiPerPage),
+            characters: data.slice(recordsToSkip, recordsToSkip + uiPerPage),
             totalPages: Math.ceil(totalCount / uiPerPage)
         }});
+    }
+
+    function appendPageParamToUrl(endpoint: string, page: number): string {
+        const url = new URL(endpoint);
+        url.searchParams.append('page', page+'');
+        return url.href;
     }
 }

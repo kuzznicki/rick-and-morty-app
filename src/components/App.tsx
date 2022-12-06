@@ -1,23 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import CharactersTable from './CharactersTable';
 import SearchInput from './SearchInput';
 import MultiSelect from './MultiSelect';
-import { ApiFilters, Character } from '@/types';
-import { getTempApiData, unique } from '@/utils';
+import { ApiFilters } from '@/types';
 import '@/styles/components/App.scss'
 import Pagination from './Pagination';
 import useCharactersApi from '@/hooks/useCharactersApi';
 import Loading from './Loading';
 import ErrorMessage from './ErrorMessage';
+import { getSpeciesOptions } from '@/utils';
 
 const PER_PAGE = 5;
+const speciesOptions = getSpeciesOptions();
 
 function App() {
   const [apiFilters, setApiFilters] = useState<ApiFilters>({ name: '', species: [] });
   const { data, isLoading, error } = useCharactersApi(apiFilters, { perPage: PER_PAGE });
   const { characters, totalPages } = data;
-
-  console.log('data (isLoading:' + isLoading + ')', data);
 
   function handlePageChange(pageNumber: number) {
     console.log('change page', pageNumber);
@@ -36,7 +35,7 @@ function App() {
         />
         <MultiSelect
           placeholder="Species"
-          options={[{ value: 'human', label: 'Human'}, { value: 'alien', label: 'Alien'}]}
+          options={speciesOptions}
           onChange={values => setApiFilters(f => ({...f, species: values}))}
         />
       </div>
