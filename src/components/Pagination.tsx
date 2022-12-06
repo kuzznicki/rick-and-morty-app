@@ -1,10 +1,9 @@
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import '@/styles/components/Pagination.scss';
 import chevronLeft from '@/assets/chevron-left.svg';
 import chevronRight from '@/assets/chevron-right.svg';
 
-type State = { page: number };
-type Action = { type: string };
+type PagesHelperArray = (number | '...')[];
 type Props = {
     itemsCount: number
     perPage: number
@@ -12,17 +11,9 @@ type Props = {
     onChange: (firstIndex: number, lastIndex: number) => void
 };
 
-function reducer(state: State, action: Action) {
-    return state;
-}
-
 export default function Pagination({ itemsCount, perPage, initialPage = 1, onChange }: Props) {
     const [page, setPage] = useState(initialPage);
     const lastPage = Math.ceil(itemsCount / perPage);
-
-    const first3 = [1, 2, 3].filter(isValidPageNumber);
-    const last3 = [-2, -1, 0].map(e => e + lastPage).filter(e => isValidPageNumber(e) && !first3.includes(e));
-    const mid3 = [-1, 0, 1].map(e => e + page).filter(e => isValidPageNumber(e) && ![...first3, ...last3].includes(e));
 
     useEffect(() => changePage(1), [itemsCount]);
 
@@ -42,22 +33,37 @@ export default function Pagination({ itemsCount, perPage, initialPage = 1, onCha
         }
     }
 
-    function numbersToButtons(numbers: number[]): ReactNode {
-        return numbers.map(number => (
-            <button
-                key={number}
-                className={number === page ? 'active' : ''}
-                onClick={() => changePage(number)}>
-                {number}
-            </button>
-        ));
+    function pageNumbersToButtons(pageNumbers: PagesHelperArray) {
+        return pageNumbers.map((pageNumber, i) => {
+            if (pageNumber === '...') return <Separator key={i + '__separator'} />
+            return (
+                <button 
+                    key={i + '__' + pageNumber}
+                    className={pageNumber === page ? 'active' : ''}
+                    onClick={() => changePage(pageNumber)}
+                    >
+                    {pageNumber}
+                </button>
+            )
+        })
     }
 
-    function isSeparatorNeeded(pagesOnLeft: number[], pagesOnRight: number[]) {
-        const left = pagesOnLeft.at(-1);
-        const right = pagesOnRight.at(0);
-        if (left === undefined || right === undefined) return false;
-        return right - left > 1;
+    function generatePageNumbers(): PagesHelperArray {
+        let pages: PagesHelperArray = [1, 2, 3, '...', lastPage - 2, lastPage - 1, lastPage];
+
+        if (page <= 2 || page >= lastPage - 1) return pages;
+
+        if (page === 3) {
+            pages[3] = 4;
+            pages[4] = '...';
+        } else if (page === lastPage - 2) {
+            pages[2] = '...';
+            pages[3] = lastPage - 3;
+        } else {
+            pages = [1, '...', page - 1, page, page + 1, '...', lastPage];
+        }
+
+        return pages;
     }
 
     return (
@@ -65,14 +71,9 @@ export default function Pagination({ itemsCount, perPage, initialPage = 1, onCha
             <button disabled={page <= 1} onClick={() => changePage(page - 1)}>
                 <img src={chevronLeft} />
             </button>
-            {numbersToButtons(first3)}
-            
-            {isSeparatorNeeded(first3, mid3) && <Separator />}
-            {numbersToButtons(mid3)}
-            {isSeparatorNeeded(mid3, last3) && <Separator />}
 
-            {mid3.length === 0 && isSeparatorNeeded(first3, last3) && <Separator />}
-            {numbersToButtons(last3)}
+            { pageNumbersToButtons(generatePageNumbers()) }
+
             <button disabled={page >= lastPage} onClick={() => changePage(page + 1)}>
                 <img src={chevronRight} />
             </button>

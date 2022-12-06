@@ -23,11 +23,9 @@ body {
 }
 
 button {
+  @include buttonSize;
   color: $primaryAnthracite80;
   font-size: 14px;
-  height: 40px;
-  min-width: 40px;
-  margin: 0 2px;
   border: 1px solid $secondaryBluePale40;
   border-radius: 5px;
   background-color: white;

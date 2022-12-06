@@ -24,3 +24,9 @@ $inputFocusColor: $secondaryBluePale100;
 $inputFocusBorderWidth: 2px;
 
 $avatarBorderColor: $secondaryBluePale15;
+
+@mixin buttonSize {
+    height: 40px;
+    min-width: 40px;
+    margin: 0 2px;
+}
