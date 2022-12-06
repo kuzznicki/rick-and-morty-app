@@ -5,31 +5,26 @@ import chevronRight from '@/assets/chevron-right.svg';
 
 type PagesHelperArray = (number | '...')[];
 type Props = {
-    itemsCount: number
-    perPage: number
+    totalPages: number
     initialPage?: number
-    onChange: (firstIndex: number, lastIndex: number) => void
+    onChange: (pageNumber: number) => void
 };
 
-export default function Pagination({ itemsCount, perPage, initialPage = 1, onChange }: Props) {
+export default function Pagination({ totalPages, initialPage = 1, onChange }: Props) {
     const [page, setPage] = useState(initialPage);
-    const lastPage = Math.ceil(itemsCount / perPage);
 
-    useEffect(() => changePage(1), [itemsCount]);
+    useEffect(() => changePage(1), [totalPages]);
 
     function isValidPageNumber(pageNumber: number) {
         return Number.isInteger(pageNumber)
             && pageNumber >= 1
-            && pageNumber <= lastPage;
+            && pageNumber <= totalPages;
     }
 
     function changePage(pageNumber: number) {
         if (isValidPageNumber(pageNumber)) {
             setPage(pageNumber);
-
-            const lastIndex = pageNumber * perPage;
-            const firstIndex = lastIndex - perPage;
-            onChange(firstIndex, lastIndex);
+            onChange(pageNumber);
         }
     }
 
@@ -49,18 +44,20 @@ export default function Pagination({ itemsCount, perPage, initialPage = 1, onCha
     }
 
     function generatePageNumbers(): PagesHelperArray {
-        let pages: PagesHelperArray = [1, 2, 3, '...', lastPage - 2, lastPage - 1, lastPage];
+        if (totalPages < 8) return new Array(totalPages).fill(0).map((e, i) => i + 1);
+        
+        let pages: PagesHelperArray = [1, 2, 3, '...', totalPages - 2, totalPages - 1, totalPages];
 
-        if (page <= 2 || page >= lastPage - 1) return pages;
+        if (page <= 2 || page >= totalPages - 1) return pages;
 
         if (page === 3) {
             pages[3] = 4;
             pages[4] = '...';
-        } else if (page === lastPage - 2) {
+        } else if (page === totalPages - 2) {
             pages[2] = '...';
-            pages[3] = lastPage - 3;
+            pages[3] = totalPages - 3;
         } else {
-            pages = [1, '...', page - 1, page, page + 1, '...', lastPage];
+            pages = [1, '...', page - 1, page, page + 1, '...', totalPages];
         }
 
         return pages;
@@ -74,7 +71,7 @@ export default function Pagination({ itemsCount, perPage, initialPage = 1, onCha
 
             { pageNumbersToButtons(generatePageNumbers()) }
 
-            <button disabled={page >= lastPage} onClick={() => changePage(page + 1)}>
+            <button disabled={page >= totalPages} onClick={() => changePage(page + 1)}>
                 <img src={chevronRight} />
             </button>
 
