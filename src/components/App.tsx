@@ -10,12 +10,11 @@ import Loading from './Loading';
 import ErrorMessage from './ErrorMessage';
 import { getSpeciesOptions } from '@/utils';
 
-const PER_PAGE = 5;
 const speciesOptions = getSpeciesOptions();
 
 function App() {
   const [apiFilters, setApiFilters] = useState<ApiFilters>({ name: '', species: [] });
-  const { data, isLoading, error } = useCharactersApi(apiFilters, { perPage: PER_PAGE });
+  const { data, isLoading, error } = useCharactersApi(apiFilters, { perPage: 5 });
   const { characters, totalPages } = data;
 
   function handlePageChange(pageNumber: number) {

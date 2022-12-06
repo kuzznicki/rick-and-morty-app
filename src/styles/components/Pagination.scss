@@ -1,7 +1,15 @@
 @use '../variables' as *;
 
 .pagination {
-    align-self: flex-end;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    & > * {
+        flex: 1 1 auto;
+        min-width: auto;
+        max-width: $buttonMinWidth;
+    }
 
     span.separator {
         @include buttonSize;
