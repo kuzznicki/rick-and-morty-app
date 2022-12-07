@@ -15,8 +15,10 @@
 
 body {
     font-family: 'Oswald';
+    font-size: 15px;
     margin: 0;
     padding: 0;
+    color: $defaultFontColor;
     background-color: #F5F8FD;
     width: 100vw;
     min-height: 100vh;

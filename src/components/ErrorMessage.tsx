@@ -3,7 +3,7 @@ import deadLogo from '@/assets/dead.svg';
 
 type Props = { message?: string, debugInfo?: string | null };
 
-export default function ErrorMessage({ message = 'Something went wrong. Try again...', debugInfo = null }: Props) {
+export default function ErrorMessage({ message = 'Something went wrong.', debugInfo = null }: Props) {
     return (
         <div className="error-indicator">
             <img src={deadLogo} alt="Error icon" />

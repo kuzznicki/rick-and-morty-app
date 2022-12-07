@@ -69,7 +69,13 @@ export default function useCharactersApi(filters: ApiFilters, options: Options) 
         dispatch({ type: 'loading' });
 
         const response = await fetch(endpoint);
-        if (!response.ok) throw new Error(response.statusText);
+        if (!response.ok) {
+            if (response.status === 404) { // nothing found for that query
+                return [0, []];
+            } else {
+                throw new Error(response.statusText || String(response.status));
+            }
+        }
 
         const data = await response.json() as ApiResponse;
         if (!isApiResponse(data)) throw new Error('Failed to get valid data from the API');

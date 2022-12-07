@@ -27,6 +27,7 @@ export default function CharactersTable({ data }: Props) {
     }
 
     return (
+        <div className="table-wrapper">
         <table>
             <colgroup>
                 <col style={{ width: '60px' }} />
@@ -84,5 +85,7 @@ export default function CharactersTable({ data }: Props) {
                 })}
             </tbody>
         </table>
+        {!data.length && (<div className="no-data-message">Nothing to display</div>)}
+        </div>
     );
 }
