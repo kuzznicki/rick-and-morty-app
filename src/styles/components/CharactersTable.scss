@@ -18,15 +18,14 @@ table {
         to { opacity: 1; }
     }
 
-    thead > tr > th:first-of-type, 
-    tbody > tr > td:first-of-type { 
-        padding-left: 24px;
-    }
-
     thead > tr > th {
         font-size: 14px;
         padding: 12px 0;
         text-align: left;
+
+        &:first-of-type {
+            padding-left: 24px;
+        }
     }
 
     tbody > tr {
@@ -34,27 +33,40 @@ table {
             color: $primaryAnthracite70;
             background-color: $secondaryBluePale5;
 
-            td .species { color: $primaryAnthracite50; }
-            td.unknown { color: $primaryAnthracite25; }
+            td.unknown { 
+                color: $primaryAnthracite25;
+            }
+
+            td .species { 
+                color: $primaryAnthracite50;
+            }
         }
 
         td {
             border-top: 1px solid $secondaryBluePale30;
             padding: 16px 16px 16px 0;
             white-space: nowrap;
-            // overflow: hidden;
             text-overflow: ellipsis;
             
-            & .species { color: $primaryAnthracite80; }
-            &.unknown { color: $primaryAnthracite70; }
-        }
+            &:first-of-type { 
+                padding-left: 24px;
+            }
 
-        td span:not(:has(.tooltip-wrapper)) {
-            display: block;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: fit-content;
+            &.unknown { 
+                color: $primaryAnthracite70;
+            }
+
+            .species { 
+                color: $primaryAnthracite80;
+            }
+
+            span:not(:has(.tooltip-wrapper)) {
+                display: block;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: fit-content;
+            }
         }
     }
 }

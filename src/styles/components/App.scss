@@ -1,23 +1,23 @@
 @use '../variables' as *;
 
 .App {
-  padding: 55px;
-  max-width: $maxAppWidth;
-  margin: auto;
+    padding: 55px;
+    max-width: $maxAppWidth;
+    margin: auto;
 
-  h1 {
-    font-size: 24px;
-    padding-bottom: 24px;
-  }
-  
-  .content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .filters {
-    display: flex; 
-    gap: 48px;
-  }
+    h1 {
+        font-size: 24px;
+        padding-bottom: 24px;
+    }
+
+    .content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .filters {
+        display: flex;
+        gap: 48px;
+    }
 }
