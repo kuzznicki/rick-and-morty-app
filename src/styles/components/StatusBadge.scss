@@ -4,6 +4,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    color: $defaultFontColor;
 
     & * {
         float: left;
@@ -20,7 +21,7 @@
         overflow: hidden;
     }
 
-    &.unknown .label {
+    &.unknown {
         color: $primaryAnthracite70;
     }
 }
