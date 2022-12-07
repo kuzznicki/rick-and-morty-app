@@ -8,7 +8,7 @@
     position: relative;
     display: flex;
     min-width: 0;
-    
+
     $tooltipArrowSize: 15px;
     $tooltipColor: #d5e6fb;
 
@@ -33,12 +33,11 @@
         }
 
         &:hover::after {
-            transform: translate(-50%, -$tooltipArrowSize) scale(1);
+            transform: translate(-50%, -1.1 * $tooltipArrowSize) scale(1);
             opacity: 1;
         }
 
         &::before {
-            // content: 'Very long text that should not fit in just one line. Macos tooltip wrapper emoji jupyter debug console';
             content: attr(data-tooltip);
             
             color: $primaryAnthracite80;
@@ -55,7 +54,6 @@
 
             white-space: break-spaces;
         }
-
 
         &:hover::before {
             transform: translate(-50%, calc(-100% - $tooltipArrowSize)) scale(1);
