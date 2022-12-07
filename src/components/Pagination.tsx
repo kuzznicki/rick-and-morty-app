@@ -33,11 +33,11 @@ export default function Pagination({ totalPages, initialPage = 1, visible = true
         return pageNumbers.map((pageNumber, i) => {
             if (pageNumber === '...') return <Separator key={i + '__separator'} />
             return (
-                <button 
+                <button
                     key={i + '__' + pageNumber}
                     className={pageNumber === page ? 'active' : ''}
                     onClick={() => changePage(pageNumber)}
-                    >
+                >
                     {pageNumber}
                 </button>
             )
@@ -46,7 +46,7 @@ export default function Pagination({ totalPages, initialPage = 1, visible = true
 
     function generatePageNumbers(): PagesHelperArray {
         if (totalPages < 8) return new Array(totalPages).fill(0).map((e, i) => i + 1);
-        
+
         let pages: PagesHelperArray = [1, 2, 3, '...', totalPages - 2, totalPages - 1, totalPages];
 
         if (page <= 2 || page >= totalPages - 1) return pages;
@@ -70,12 +70,11 @@ export default function Pagination({ totalPages, initialPage = 1, visible = true
                 <img src={chevronLeft} />
             </button>
 
-            { pageNumbersToButtons(generatePageNumbers()) }
+            {pageNumbersToButtons(generatePageNumbers())}
 
             <button disabled={page >= totalPages} onClick={() => changePage(page + 1)}>
                 <img src={chevronRight} />
             </button>
-
         </div>
     );
 }

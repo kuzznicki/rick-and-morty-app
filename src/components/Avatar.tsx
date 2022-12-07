@@ -7,6 +7,10 @@ type AvatarProps = {
 
 export function Avatar({ source, name }: AvatarProps) {
     return (
-        <img className="avatar" src={source} alt={'Avatar' + (!!name ? ` for ${name}` : '')}/>
+        <img
+            className="avatar"
+            src={source}
+            alt={'Avatar' + (!!name ? ` for ${name}` : '')}
+        />
     );
 }

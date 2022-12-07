@@ -1,9 +1,9 @@
+import Tooltip from "./Tooltip";
 import { Status } from "@/types";
+import '@/styles/components/StatusBadge.scss';
 import unknownIcon from '@/assets/unknown.svg';
 import aliveIcon from '@/assets/alive.svg';
 import deadIcon from '@/assets/dead.svg';
-import '@/styles/components/StatusBadge.scss';
-import Tooltip from "./Tooltip";
 
 const iconByStatus: { [key in Status]: string } = {
     Dead: deadIcon,

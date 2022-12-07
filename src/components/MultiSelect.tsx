@@ -1,7 +1,7 @@
+import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import '@/styles/components/MultiSelect.scss';
 import cssVars from '@/styles/_export.module.scss';
-import { useEffect, useState } from 'react';
 
 type SelectProps = {
     options: { value: string, label: string }[],
@@ -11,14 +11,14 @@ type SelectProps = {
 
 export default function MultiSelect({ options, placeholder, onChange }: SelectProps) {
     const [values, setValues] = useState<string[]>([]);
-    
+
     useEffect(() => {
         const timeout = setTimeout(() => onChange(values), 500);
-        return () => clearTimeout(timeout);        
+        return () => clearTimeout(timeout);
     }, [values]);
 
     return (
-        <Select 
+        <Select
             isMulti
             closeMenuOnSelect={false}
             placeholder={placeholder}
@@ -44,4 +44,3 @@ export default function MultiSelect({ options, placeholder, onChange }: SelectPr
         />
     );
 }
-

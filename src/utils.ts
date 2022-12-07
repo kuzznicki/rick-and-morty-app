@@ -34,6 +34,6 @@ export function apiDataToCharacters(data: ApiCharacterSchema[]) {
 
 export function appendParamToUrl(endpoint: string, param: string, value: string | number): string {
     const url = new URL(endpoint);
-    url.searchParams.append(param, value+'');
+    url.searchParams.append(param, String(value));
     return url.href;
 }
